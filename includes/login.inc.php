@@ -1,12 +1,14 @@
 <?php 
 if (isset($_POST['login-submit'])) {
-	require 'dbh.inc.php';
 
+	require 'dbh.inc.php';
 	$mailuid = $_POST['mailuid'];
 	$password = $_POST['pwd'];
 
+    //Error handlers
+    //Check if inputs are empty
 if (empty($mailuid) || empty($password)) {
-	# code...
+
 		header("Location: ../index.php?error=emptyfields");
 		exit();
 }
@@ -27,7 +29,8 @@ else{
     	$result = mysqli_stmt_get_result($stmt);
 
     	if ($row = mysqli_fetch_assoc($result)) {
-
+    
+            //De-hashing the paswrd
     		$pwdCheck = password_verify($password, $row['pwdUsers']);
 
     		if ($pwdCheck ==false){
@@ -38,11 +41,12 @@ else{
     		}
     		elseif($pwdCheck == true){
 
-    			session_start();
-    			$_SESSION['userID'] = $row['idUsers'];
-    			$_SESSION['userUiD'] = $row['uidUsers'];
- 			header("Location: ../index.php?login=success");
-			exit(); 
+                    //Starting session to login user 
+    			    session_start();
+    			    $_SESSION['userID'] = $row['idUsers'];
+    			    $_SESSION['userUiD'] = $row['uidUsers'];
+ 			        header("Location: ../index.php?login=success");
+			        exit(); 
 
     		}
     	}else{
